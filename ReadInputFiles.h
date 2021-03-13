@@ -5,7 +5,6 @@
 #include "Grain.h"
 #include "EssentialBoundaryConditions.h"
 
-//namespace Utilities {
 	vector<Vector2d>
 	readNodePositions(string Positions) {
 		string line_position;
@@ -15,7 +14,6 @@
 		ifstream file_position(Positions.c_str());
 		getline(file_position, line_position);
 		size_t numberOfNodes = atoi(line_position.c_str());
-		//cout << "number of nodes is " << numberOfNodes << endl;
 
 		Vector2d position;
 		vector<Vector2d> nodePositions(numberOfNodes);
@@ -27,7 +25,6 @@
     	    getline(iss, partial, ' ');
     	    position(1) = atof(partial.c_str());
     	    nodePositions[index] = position;
-    	    //cout << position(0) << " " << position(1) << endl;
     	    iss.clear();			
 		}
 		return nodePositions;
@@ -42,7 +39,6 @@
 		ifstream file_mesh(Meshes.c_str());
 		getline(file_mesh, line_mesh);
 		size_t numberOfElements = atoi(line_mesh.c_str());
-		//cout << "number of elements is " << numberOfElements << endl; 
 		vector<size_t> elementmesh(3);
 		vector< vector<size_t> > allElementMeshes(numberOfElements);
 
@@ -147,7 +143,6 @@
 		vector<StaticGrain> grainList(numberOfGrains);                 
 
 		for (unsigned int gindex = 0; gindex < numberOfGrains; gindex++) {
-			// do positions for a single grain
 			getline(file_position, line_position);
 		    number = atoi(line_position.c_str());
 		    numberOfNodes = number;
@@ -160,11 +155,9 @@
     	        getline(iss, partial, ' ');
     	        position(1) = atof(partial.c_str());
     	        singleGrainNodePositions[index] = position;
-    	        //cout << position(0) << " " << position(1) << endl;
     	        iss.clear();			
 		    }
 
-            // do meshes for a single grain
 		    getline(file_mesh, line_mesh);
 		    number = atoi(line_mesh.c_str());
 		    singleGrainElements.resize(number);
@@ -189,7 +182,6 @@
 		    	iss.clear();
 		    }
 
-		    // do connectivities for a single grain
 		    getline(file_connectivity, line_connectivity);
 		    number = atoi(line_connectivity.c_str());
 		    singleGrainBoundaryConnectivities.resize(number);
@@ -204,7 +196,6 @@
 		    	iss.clear();
 		    }
 
-		    // do boundary ids for a single grain
 		    getline(file_id, line_id);
 		    number = atoi(line_id.c_str());
 		    singleGrainBoundaryNodeIds.resize(number);
@@ -214,17 +205,14 @@
 		    }
 
 
-		    // do material constants
 		    getline(file_material, line_material);
 		    iss.str(line_material);
 		    getline(iss, partial, ' ');
 		    youngsModulus = atof(partial.c_str());
 		    getline(iss, partial, ' ');
 		    frictionCoefficient = atof(partial.c_str());
-		    //cout << "grain " << gindex << "has friction coe " << frictionCoefficient << endl;
 		    iss.clear();
 
-            // now create elements for a single grain
 		    for (unsigned int index = 0; index < singleGrainElements.size(); index++) {
 		    	elementNodePositions[0] = singleGrainNodePositions[singleGrainMeshes[index][0]];
 		    	elementNodePositions[1] = singleGrainNodePositions[singleGrainMeshes[index][1]];
@@ -237,15 +225,11 @@
 		    	singleGrainElements[index] = element;
 		    }
 
-		    // do pnumber for a single grain
 		    getline(file_number, line_number);
 		    pnumber = atoi(line_number.c_str());
 
-
-            // now construct a grain
 		    grainList[gindex] = StaticGrain(gindex, singleGrainElements, numberOfNodes, singleGrainNodePositions,
 		    	singleGrainBoundaryNodeIds, singleGrainBoundaryConnectivities, pnumber,youngsModulus,frictionCoefficient);
-		    //cout << 2222 << endl;
 
 		}
 		return grainList;
@@ -287,7 +271,4 @@
 	}
 
 
-	
-//}
-
-#endif  // UTILITIES_H
+#endif
